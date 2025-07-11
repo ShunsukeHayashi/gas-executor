@@ -1,0 +1,45 @@
+{
+  "timeZone": "Asia/Tokyo",
+  "dependencies": {
+    "enabledAdvancedServices": [
+      {
+        "userSymbol": "Drive",
+        "version": "v3",
+        "serviceId": "drive"
+      },
+      {
+        "userSymbol": "Docs",
+        "version": "v1",
+        "serviceId": "docs"
+      },
+      {
+        "userSymbol": "YouTube",
+        "version": "v3",
+        "serviceId": "youtube"
+      },
+      {
+        "userSymbol": "YouTubeContentId",
+        "version": "v1",
+        "serviceId": "youtubePartner"
+      },
+      {
+        "userSymbol": "YouTubeAnalytics",
+        "version": "v2",
+        "serviceId": "youtubeAnalytics"
+      }
+    ]
+  },
+  "oauthScopes": [
+    "https://www.googleapis.com/auth/script.external_request",
+    "https://www.googleapis.com/auth/youtube.readonly",
+    "https://www.googleapis.com/auth/youtube",
+    "https://www.googleapis.com/auth/drive",
+    "https://www.googleapis.com/auth/documents"
+  ],
+  "exceptionLogging": "STACKDRIVER",
+  "runtimeVersion": "V8",
+  "webapp": {
+    "executeAs": "USER_DEPLOYING",
+    "access": "ANYONE_ANONYMOUS"
+  }
+}

@@ -1,0 +1,52 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build/Distribution
+dist/
+build/
+
+# Logs
+logs/
+*.log
+
+# Testing
+coverage/
+.nyc_output/
+
+# Package lock files (choose one)
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Clasp credentials (sensitive)
+.clasprc.json
+creds.json
+
+# Local development notes
+*.local.md
+notes.txt

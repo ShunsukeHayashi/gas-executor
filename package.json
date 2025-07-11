@@ -1,0 +1,25 @@
+{
+  "name": "gas-executor",
+  "version": "1.0.0",
+  "description": "Google Apps Script Executor - API Key Management and Script Execution System",
+  "scripts": {
+    "push": "clasp push",
+    "pull": "clasp pull",
+    "open": "clasp open",
+    "logs": "clasp logs",
+    "deploy": "clasp deploy",
+    "versions": "clasp versions",
+    "watch": "clasp push --watch"
+  },
+  "keywords": [
+    "google-apps-script",
+    "gas",
+    "clasp"
+  ],
+  "author": "Shunsuke Hayashi",
+  "license": "MIT",
+  "devDependencies": {
+    "@google/clasp": "^2.4.2",
+    "@types/google-apps-script": "^1.0.83"
+  }
+}
