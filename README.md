@@ -88,3 +88,9 @@ clasp versions
 - Test locally when possible before pushing
 - Use meaningful deployment descriptions
 - Keep API keys secure and never commit them to version control
+
+## Planned Features
+- **Rate Limiting**: Implement request throttling per API key
+- **Webhook Validation**: Add request signature verification
+- **Dashboard**: Create a web interface for API key management
+- **Metrics**: Add execution analytics and performance monitoring
