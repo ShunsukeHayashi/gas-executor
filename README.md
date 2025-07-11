@@ -1,6 +1,8 @@
-# GAS Executor - Local Development
+# GAS Executor - API Key Management and Script Execution System
 
-This project is a Google Apps Script application for API key management and script execution.
+English | [日本語](README.ja.md)
+
+A webhook API system for securely executing JavaScript code in Google Apps Script environment.
 
 ## Development Setup
 
