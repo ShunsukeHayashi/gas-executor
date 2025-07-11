@@ -1,0 +1,87 @@
+openapi: 3.1.0
+info:
+  title: Dynamic Script Execution API
+  description: This API enables the secure, dynamic execution of custom JavaScript functions within a Google Apps Script environment. It allows scripts to interact with Google Services like Gmail, Slides, and Spreadsheets, streamlining automated tasks and data processing.
+  version: 1.0.0
+servers:
+  - url: https://script.google.com
+paths:
+  /macros/s/AKfycbz0B_QiTTqmw55XQhPU4ElyQKCRQZTPjrHd3Vg9F0pIvyHFBOWlreUPwZvVVSJN8b0a/exec:
+    post:
+      summary: Execute Custom Script with Google Services Interaction
+      description: Executes custom JavaScript for tasks like data manipulation in Spreadsheets and content creation in Slides. Enables automation within Google Services, streamlining workflows.
+      operationId: executeCustomScript
+      x-openai-isConsequential: false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExecuteScriptRequest'
+      responses:
+        "200":
+          description: Successful execution, with operation results returned.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecuteScriptResponse'
+        "400":
+          description: Request issues, such as missing script data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal error, possibly from script execution or service interaction issues.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ExecuteScriptRequest:
+      type: object
+      required:
+        - title
+        - script
+        - apiKey
+      properties:
+        title:
+          type: string
+          description: Short title of the script.
+        script:
+          type: string
+          description: Custom JavaScript function to execute, interacting with Google Services for automation.
+        apiKey:
+          type: string
+          description: Your API key for authentication
+    ExecuteScriptResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Whether the script executed successfully
+        result:
+          type: string
+          description: The return value from the executed script
+        timestamp:
+          type: string
+          description: ISO timestamp of execution
+        executionTime:
+          type: number
+          description: Time taken to execute the script in milliseconds
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          description: Always false for errors
+        error:
+          type: string
+          description: Error message
+        statusCode:
+          type: number
+          description: HTTP status code
+        timestamp:
+          type: string
+          description: ISO timestamp of the error

@@ -1,38 +1,12 @@
-# Ignore node_modules
-node_modules/
-
-# Ignore TypeScript source files (if using TypeScript)
-**/*.ts
+**/**
 !appsscript.json
+!コード.js
+!*.gs
+!*.js
 
-# Ignore test files
-**/*.test.js
-**/*.spec.js
-
-# Ignore configuration files
-.env
-.env.local
-.git/
-.gitignore
-
-# Ignore build artifacts
-dist/
-build/
-
-# Ignore documentation
+# But exclude these even if they match above
+node_modules/**
+local-modules/**
 *.md
-docs/
-
-# Ignore package files
-package.json
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Ignore IDE files
-.vscode/
-.idea/
-
-# Ignore OS files
-.DS_Store
-Thumbs.db
+package*.json
+.*
