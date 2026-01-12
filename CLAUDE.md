@@ -145,3 +145,76 @@ return `Sheet created: ${spreadsheet.getUrl()}`;
 - Keys are stored securely in Google Script Properties
 - Anonymous access is allowed but controlled via API keys
 - All script executions are logged with timestamp and identifier
+
+## L-Step Integration
+
+### lstep-tags.js
+
+PPAL用L-Stepタグ管理スクリプト。34件のタグをスプレッドシートに生成。
+
+**タグカテゴリ:**
+| カテゴリ | 件数 | 例 |
+|---------|------|-----|
+| セグメント | 3 | `Seg:Tech_Interest`, `Seg:Biz_Result` |
+| ステータス | 9 | `Status:Purchased_Main`, `Status:Churned` |
+| 商品 | 3 | `Product:PPAL_Monthly`, `Product:VIP_Coaching` |
+| 進捗 | 8 | `Progress:Week1_Complete`, `Progress:All_Complete` |
+| エンゲージメント | 4 | `Eng:High_Activity`, `Engagement:Review_Posted` |
+| その他 | 7 | `Upsell:VIP_Candidate`, `Source:5Days` |
+
+**実行:**
+```javascript
+// GAS内で実行
+pushLStepTags();  // スプレッドシート作成・タグ一覧出力
+```
+
+## MCP Server
+
+### mcp-server/
+
+Claude Code / MCP対応のローカルサーバー。GAS Executorをツールとして公開。
+
+**コマンド:**
+```bash
+cd mcp-server && npm run build     # TypeScriptビルド
+cd mcp-server && npm run dev       # 開発モード（tsx）
+cd mcp-server && npm run start     # 本番起動
+cd mcp-server && npm run dev:chatgpt   # ChatGPT互換サーバー
+cd mcp-server && npm run start:chatgpt # ChatGPT互換本番
+```
+
+**MCP設定例 (.mcp.json):**
+```json
+{
+  "mcpServers": {
+    "gas-executor": {
+      "command": "node",
+      "args": ["/path/to/gas-executor/mcp-server/dist/index.js"],
+      "env": {
+        "GAS_API_KEY": "your-api-key",
+        "GAS_WEBHOOK_URL": "https://script.google.com/macros/s/.../exec"
+      }
+    }
+  }
+}
+```
+
+## ChatGPT Actions Integration
+
+### chatgpt-actions-schema.yaml
+
+ChatGPT Custom GPT Actions用OpenAPIスキーマ。
+
+**利用可能API:**
+- `GmailApp` - メール送信・検索・ラベル管理
+- `SpreadsheetApp` - スプレッドシート読み書き
+- `DriveApp` - ファイル一覧・フォルダ作成
+- `CalendarApp` - イベント取得・作成
+- `DocumentApp` - ドキュメント作成・編集
+- `UrlFetchApp` - HTTP リクエスト
+
+**GPT設定手順:**
+1. ChatGPT → My GPTs → Create
+2. Actions → Import from URL or paste schema
+3. `chatgpt-actions-schema.yaml` の内容を貼り付け
+4. Authentication: API Key (Header: `x-api-key`)
