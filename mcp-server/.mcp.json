@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "gas-executor": {
+      "command": "node",
+      "args": ["./dist/index.js"],
+      "env": {
+        "GAS_ENDPOINT": "https://script.google.com/macros/s/AKfycbzBQTiCEMPkxS7VCIWEp6w-CxMTwRNvbINgKIUUDP_XNrtT2ajatY2a_WpNnPVXUw4z/exec",
+        "GAS_API_KEY": "3ab413e9-4c63-42a4-9108-923da155e494"
+      }
+    }
+  }
+}

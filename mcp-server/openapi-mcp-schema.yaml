@@ -1,0 +1,329 @@
+openapi: 3.1.0
+info:
+  title: GAS Executor MCP Tools
+  description: |
+    MCP (Model Context Protocol) tools for Google Apps Script Executor.
+    Provides 15 tools for automating Google Workspace: Gmail, Drive, Sheets, Docs, Calendar.
+  version: 1.0.0
+
+components:
+  schemas:
+    # Core Tool
+    GasExecuteInput:
+      type: object
+      required: [title, script]
+      properties:
+        title:
+          type: string
+          description: Short title/identifier for the script execution (for logging)
+        script:
+          type: string
+          description: |
+            JavaScript code to execute. Must include a return statement.
+            Has access to Google Apps Script APIs:
+            - SpreadsheetApp
+            - GmailApp
+            - DriveApp
+            - CalendarApp
+            - DocumentApp
+            - UrlFetchApp
+            - Utilities
+            - Session
+
+    # Gmail Tools
+    GasGmailSendInput:
+      type: object
+      required: [to, subject, body]
+      properties:
+        to:
+          type: string
+          description: Recipient email address
+        subject:
+          type: string
+          description: Email subject
+        body:
+          type: string
+          description: Email body (plain text or HTML)
+        htmlBody:
+          type: boolean
+          description: If true, body is treated as HTML
+
+    GasGmailSearchInput:
+      type: object
+      required: [query]
+      properties:
+        query:
+          type: string
+          description: Gmail search query (e.g., "from:example@gmail.com", "is:unread")
+        maxResults:
+          type: number
+          description: Maximum number of threads to return (default 10)
+
+    GasGmailGetInboxInput:
+      type: object
+      properties:
+        maxResults:
+          type: number
+          description: Number of recent threads to fetch (default 10)
+
+    # Sheets Tools
+    GasSheetsReadInput:
+      type: object
+      required: [spreadsheetId, range]
+      properties:
+        spreadsheetId:
+          type: string
+          description: Spreadsheet ID (from URL)
+        range:
+          type: string
+          description: A1 notation range (e.g., "Sheet1!A1:D10")
+
+    GasSheetsWriteInput:
+      type: object
+      required: [spreadsheetId, range, values]
+      properties:
+        spreadsheetId:
+          type: string
+          description: Spreadsheet ID (from URL)
+        range:
+          type: string
+          description: A1 notation range (e.g., "Sheet1!A1")
+        values:
+          type: array
+          items:
+            type: array
+            items: {}
+          description: Two-dimensional array of values to write
+
+    GasSheetsCreateInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          description: Name for the new spreadsheet
+
+    # Drive Tools
+    GasDriveListInput:
+      type: object
+      properties:
+        folderId:
+          type: string
+          description: Folder ID to list files from (optional, defaults to root)
+        query:
+          type: string
+          description: Search query for files
+        maxResults:
+          type: number
+          description: Maximum number of files to return (default 100)
+
+    GasDriveGetFileInput:
+      type: object
+      required: [fileId]
+      properties:
+        fileId:
+          type: string
+          description: File ID to retrieve
+
+    GasDriveCreateFolderInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          description: Name for the new folder
+        parentId:
+          type: string
+          description: Parent folder ID (optional)
+
+    # Calendar Tools
+    GasCalendarGetEventsInput:
+      type: object
+      properties:
+        calendarId:
+          type: string
+          description: Calendar ID (default "primary")
+        startDate:
+          type: string
+          format: date-time
+          description: Start date (ISO format)
+        endDate:
+          type: string
+          format: date-time
+          description: End date (ISO format)
+        maxResults:
+          type: number
+          description: Maximum events to return (default 50)
+
+    GasCalendarCreateEventInput:
+      type: object
+      required: [title, startTime, endTime]
+      properties:
+        title:
+          type: string
+          description: Event title
+        startTime:
+          type: string
+          format: date-time
+          description: Start time (ISO format)
+        endTime:
+          type: string
+          format: date-time
+          description: End time (ISO format)
+        description:
+          type: string
+          description: Event description
+        calendarId:
+          type: string
+          description: Calendar ID (default "primary")
+
+    # Docs Tools
+    GasDocsCreateInput:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+          description: Document name
+        content:
+          type: string
+          description: Initial content (optional)
+
+    GasDocsGetContentInput:
+      type: object
+      required: [documentId]
+      properties:
+        documentId:
+          type: string
+          description: Document ID
+
+    # Utility Tools
+    GasFetchUrlInput:
+      type: object
+      required: [url]
+      properties:
+        url:
+          type: string
+          format: uri
+          description: URL to fetch
+        method:
+          type: string
+          enum: [GET, POST, PUT, DELETE, PATCH]
+          description: HTTP method (default GET)
+        payload:
+          type: object
+          description: Request payload for POST/PUT
+        headers:
+          type: object
+          additionalProperties:
+            type: string
+          description: Custom headers
+
+    # Response Schemas
+    GasSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          const: true
+        result:
+          description: Return value from the executed script
+        timestamp:
+          type: string
+          format: date-time
+        executionTime:
+          type: number
+          description: Time taken to execute in milliseconds
+
+    GasErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          const: false
+        error:
+          type: string
+          description: Error message
+        statusCode:
+          type: number
+          description: HTTP status code
+        timestamp:
+          type: string
+          format: date-time
+
+# MCP Tool Definitions (for reference)
+x-mcp-tools:
+  - name: gas_execute
+    description: Execute custom JavaScript code in Google Apps Script environment
+    inputSchema:
+      $ref: '#/components/schemas/GasExecuteInput'
+
+  - name: gas_gmail_send
+    description: Send an email via Gmail
+    inputSchema:
+      $ref: '#/components/schemas/GasGmailSendInput'
+
+  - name: gas_gmail_search
+    description: Search Gmail using Gmail search syntax
+    inputSchema:
+      $ref: '#/components/schemas/GasGmailSearchInput'
+
+  - name: gas_gmail_get_inbox
+    description: Get recent emails from Gmail inbox
+    inputSchema:
+      $ref: '#/components/schemas/GasGmailGetInboxInput'
+
+  - name: gas_sheets_read
+    description: Read data from a Google Spreadsheet
+    inputSchema:
+      $ref: '#/components/schemas/GasSheetsReadInput'
+
+  - name: gas_sheets_write
+    description: Write data to a Google Spreadsheet
+    inputSchema:
+      $ref: '#/components/schemas/GasSheetsWriteInput'
+
+  - name: gas_sheets_create
+    description: Create a new Google Spreadsheet
+    inputSchema:
+      $ref: '#/components/schemas/GasSheetsCreateInput'
+
+  - name: gas_drive_list
+    description: List files in Google Drive
+    inputSchema:
+      $ref: '#/components/schemas/GasDriveListInput'
+
+  - name: gas_drive_get_file
+    description: Get detailed information about a file in Google Drive
+    inputSchema:
+      $ref: '#/components/schemas/GasDriveGetFileInput'
+
+  - name: gas_drive_create_folder
+    description: Create a new folder in Google Drive
+    inputSchema:
+      $ref: '#/components/schemas/GasDriveCreateFolderInput'
+
+  - name: gas_calendar_get_events
+    description: Get calendar events within a date range
+    inputSchema:
+      $ref: '#/components/schemas/GasCalendarGetEventsInput'
+
+  - name: gas_calendar_create_event
+    description: Create a new calendar event
+    inputSchema:
+      $ref: '#/components/schemas/GasCalendarCreateEventInput'
+
+  - name: gas_docs_create
+    description: Create a new Google Document
+    inputSchema:
+      $ref: '#/components/schemas/GasDocsCreateInput'
+
+  - name: gas_docs_get_content
+    description: Get the content of a Google Document
+    inputSchema:
+      $ref: '#/components/schemas/GasDocsGetContentInput'
+
+  - name: gas_fetch_url
+    description: Make an HTTP request from Google Apps Script
+    inputSchema:
+      $ref: '#/components/schemas/GasFetchUrlInput'

@@ -1,0 +1,143 @@
+openapi: 3.1.0
+info:
+  title: GAS Executor - Google Workspace Automation
+  description: |
+    Execute JavaScript code in Google Apps Script environment to automate Google Workspace.
+
+    Available APIs:
+    - GmailApp: Send emails, search inbox, manage labels
+    - SpreadsheetApp: Read/write spreadsheets
+    - DriveApp: List files, create folders
+    - CalendarApp: Get/create events
+    - DocumentApp: Create/edit documents
+    - UrlFetchApp: Make HTTP requests
+
+    Scripts must include a return statement.
+  version: 1.0.0
+servers:
+  - url: https://script.google.com/macros/s/AKfycbzBQTiCEMPkxS7VCIWEp6w-CxMTwRNvbINgKIUUDP_XNrtT2ajatY2a_WpNnPVXUw4z
+
+paths:
+  /exec:
+    post:
+      summary: Execute JavaScript in Google Apps Script
+      description: |
+        Executes custom JavaScript code in GAS environment with access to all Google Workspace APIs.
+
+        Example scripts:
+
+        1. Send email:
+        ```javascript
+        GmailApp.sendEmail("to@example.com", "Subject", "Body");
+        return "Email sent";
+        ```
+
+        2. Get inbox:
+        ```javascript
+        const threads = GmailApp.getInboxThreads(0, 5);
+        return threads.map(t => ({
+          subject: t.getFirstMessageSubject(),
+          from: t.getMessages()[0].getFrom()
+        }));
+        ```
+
+        3. Read spreadsheet:
+        ```javascript
+        const ss = SpreadsheetApp.openById("SPREADSHEET_ID");
+        const data = ss.getActiveSheet().getDataRange().getValues();
+        return data;
+        ```
+
+        4. Create calendar event:
+        ```javascript
+        const cal = CalendarApp.getDefaultCalendar();
+        const event = cal.createEvent("Meeting", new Date("2025-01-15 10:00"), new Date("2025-01-15 11:00"));
+        return event.getId();
+        ```
+      operationId: executeScript
+      x-openai-isConsequential: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - script
+                - apiKey
+              properties:
+                title:
+                  type: string
+                  description: Short description of what the script does (for logging)
+                  example: "Get recent emails"
+                script:
+                  type: string
+                  description: |
+                    JavaScript code to execute. Must include a return statement.
+                    Has access to: GmailApp, SpreadsheetApp, DriveApp, CalendarApp, DocumentApp, UrlFetchApp, Session, Utilities
+                  example: "return Session.getActiveUser().getEmail();"
+                apiKey:
+                  type: string
+                  description: API key for authentication (UUID format)
+                  example: "3ab413e9-4c63-42a4-9108-923da155e494"
+      responses:
+        "200":
+          description: Script executed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether execution succeeded
+                    example: true
+                  result:
+                    description: Return value from the script (can be any JSON type)
+                    example: "user@example.com"
+                  timestamp:
+                    type: string
+                    description: ISO timestamp of execution
+                    example: "2025-01-03T12:00:00.000Z"
+                  executionTime:
+                    type: number
+                    description: Execution time in milliseconds
+                    example: 150
+        "400":
+          description: Bad request (missing script or invalid format)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: Invalid API key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Script execution error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+          description: Error message
+          example: "APIキーが無効です"
+        statusCode:
+          type: number
+          example: 401
+        timestamp:
+          type: string
+          example: "2025-01-03T12:00:00.000Z"
